@@ -1,7 +1,14 @@
 .DiceRoller__container {
-    display: flex;
+  --accent: hsl(var(--accent-h), var(--accent-s), 15%);
+  display: flex;
+  inset: 0;
+  position: fixed;
+  background: var(--color-base-20);
+  background-image: linear-gradient(var(--accent) 0.1em, transparent 0.1em),
+    linear-gradient(90deg, var(--accent) 0.1em, transparent 0.1em);
+  background-size: 1em 1em;
 }
 
 .DiceRoller__container input {
-    width: 60px;
+  width: 60px;
 }

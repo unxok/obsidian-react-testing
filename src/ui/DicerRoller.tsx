@@ -1,56 +1,45 @@
+import { App, TFile, Vault } from "obsidian";
 import * as React from "react";
+import { UpdateHp } from "src/classes/UpdateHp";
 
-function randomNumber(min: number, max: number): number {
-  return Math.floor(
-    Math.random() * (max - min + 1) + min
-  )
+declare global {
+  const app: App;
 }
 
-function rollDice(
-  numDice: number,
-  diceSides: number,
-  modifier: number
-): number {
-  let result = 0;
+export const DiceRoller = ({ filePath }: { filePath: string }) => {
+  // @ts-ignore
+  const me = app.plugins.plugins.metaedit.api;
+  // @ts-ignore
+  const dv = app.plugins.plugins.dataview.api;
+  const [hp, setHp] = React.useState({
+    current: "0",
+    max: "0",
+  });
 
-  for (let i = 0; i < numDice; i++) {
-    result += randomNumber(1, diceSides);
-  }
+  React.useEffect(() => {
+    const hpFile = dv.page(filePath);
+    // console.log("hpFile", hpFile);
+    setHp({
+      current: hpFile.current,
+      max: hpFile.max,
+    });
+  }, []);
 
-  return result + modifier;
-}
-
-export default function DiceRoller(): JSX.Element {
-  const [numDice, setNumDice] = React.useState(1);
-  const [diceSides, setDiceSides] = React.useState(20);
-  const [modifier, setModifier] = React.useState(0);
-  const [result, setResult] = React.useState(null);
+  const updateCurrent = async () => {
+    const newVal = await new Promise<string>((res) =>
+      new UpdateHp((r) => res(r)).open()
+    );
+    console.log(filePath);
+    await me.update("current", newVal, filePath);
+    setHp((prev) => ({ ...prev, current: newVal }));
+  };
 
   return (
     <>
       <div className="DiceRoller__container">
-        <input
-          type="number"
-          value={diceSides}
-          onChange={(e) => setNumDice(parseInt(e.target.value, 10))}
-        />
-        D{` `}
-        <input
-          type="number"
-          value={numDice}
-          onChange={(e) => setDiceSides(parseInt(e.target.value, 10))}
-        />
-        +{` `}
-        <input
-          type="number"
-          value={modifier}
-          onChange={(e) => setModifier(parseInt(e.target.value, 10))}
-        />
+        <button onClick={() => updateCurrent()}>Current: {hp.current}</button>
+        <button>Max: {hp.max}</button>
       </div>
-      <h4>{result}</h4>
-      <button onClick={() => setResult(rollDice(numDice, diceSides, modifier))}>
-        Roll!
-      </button>
     </>
   );
-}
+};

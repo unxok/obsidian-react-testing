@@ -1,9 +1,9 @@
 {
-  "id": "react-starter",
-  "name": "React Starter",
-  "description": "Obsidian + ReactJS",
+  "id": "ttrpg-stats",
+  "name": "TTRPG Stats",
+  "description": "A plugin to manage your stats in a TTRPG",
   "version": "0.0.0",
-  "author": "Liam Cain",
+  "author": "Unxok",
   "authorUrl": "https://github.com/liamcain/",
   "isDesktopOnly": true,
   "minAppVersion": "0.10.8"
